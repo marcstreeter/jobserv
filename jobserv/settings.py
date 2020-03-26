@@ -3,6 +3,7 @@
 
 import os
 import hashlib
+from pathlib import Path
 
 DEBUG = 1
 
@@ -84,14 +85,24 @@ if CARBON_PREFIX and CARBON_PREFIX[-1] != '.':
 RUNNER = os.path.join(os.path.dirname(__file__),
                       '../runner/dist/jobserv_runner-0.1-py3-none-any.whl')
 
-SIMULATOR_SCRIPT = os.path.join(os.path.dirname(__file__), '../simulator.py')
-with open(SIMULATOR_SCRIPT, 'rb') as f:
-    h = hashlib.md5()
-    h.update(f.read())
-    SIMULATOR_SCRIPT_VERSION = h.hexdigest()
 
-WORKER_SCRIPT = os.path.join(os.path.dirname(__file__), '../jobserv_worker.py')
-with open(WORKER_SCRIPT, 'rb') as f:
-    h = hashlib.md5()
-    h.update(f.read())
-    WORKER_SCRIPT_VERSION = h.hexdigest()
+def _path(name: str) -> str:
+    root = Path(__file__).parent.parent.absolute()
+    file_path = root / name
+    if not file_path.exists():  # used when installed as a package
+        file_path = root / 'static-content' / name
+    return file_path
+
+
+def _hash(path: str) -> str:
+    with open(path, 'rb') as f:
+        h = hashlib.md5()
+        h.update(f.read())
+        file_hash = h.hexdigest()
+    return file_hash
+
+
+SIMULATOR_SCRIPT = _path('simulator.py')
+SIMULATOR_SCRIPT_VERSION = _hash(SIMULATOR_SCRIPT)
+WORKER_SCRIPT = _path('jobserv_worker.py')
+WORKER_SCRIPT_VERSION = _hash(WORKER_SCRIPT)

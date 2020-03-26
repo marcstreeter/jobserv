@@ -4,6 +4,10 @@
 *.egg*
 *build/
 *dist/
+*.egg-info/
 
 ### IDE
 .idea
+
+### TEST
+.pytest_cache
