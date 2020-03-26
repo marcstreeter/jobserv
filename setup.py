@@ -21,12 +21,6 @@ requires = [
     "pyjwt>=1.7.1",
     "dataclasses>=0.6.0",
 ]
-data_files = [(
-    "static-content", [
-        "simulator.py",
-        "jobserv_worker.py",
-    ]
-)]
 
 setup(
     name="jobserv",
@@ -37,5 +31,6 @@ setup(
     packages=["jobserv"],
     python_requires="~=3.6",
     install_requires=requires,
-    data_files=data_files,
+    package_dir={"jobserv": "jobserv/static-content"},
+    package_data={"jobserv": ["simulator.py", "jobserv_worker.py"]},
 )
